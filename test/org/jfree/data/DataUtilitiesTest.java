@@ -136,10 +136,6 @@ class DataUtilitiesTest {
 
     
 
-    // =========================================================================
-    // TC5.1 — Javadoc example: key 0 → 0.3125
-    // =========================================================================
-
     /**
      * TC5.1a — Input {0:5, 1:9, 2:2}: key 0 should be 5/16 = 0.3125
      */
@@ -170,10 +166,7 @@ class DataUtilitiesTest {
                 "Key 2: last cumulative % must be 1.0");
     }
 
-    // =========================================================================
-    // TC5.2 — Single key: result must always be 1.0
-    // =========================================================================
-
+ 
     /**
      * TC5.2 — ECP: single entry {0:7} → output must be 1.0 (7/7)
      */
@@ -190,10 +183,6 @@ class DataUtilitiesTest {
                 "Single key: cumulative % must be 1.0");
     }
 
-    // =========================================================================
-    // TC5.3 — Two equal values: {0:10, 1:10} → {0:0.5, 1:1.0}
-    //         SPLIT into two tests so each assertion runs independently
-    // =========================================================================
 
     /**
      * TC5.3a — {0:10, 1:10}: key 0 should be 10/20 = 0.5
@@ -231,11 +220,7 @@ class DataUtilitiesTest {
                 "Key 1: last key must be 1.0");
     }
 
-    // =========================================================================
-    // TC5.4 — BVA: {0:1, 1:3, 2:6} total=10 → {0:0.1, 1:0.4, 2:1.0}
-    //         SPLIT into three independent tests
-    // =========================================================================
-
+ 
     /**
      * TC5.4a — {0:1, 1:3, 2:6}: key 0 should be 1/10 = 0.1
      */
@@ -296,10 +281,6 @@ class DataUtilitiesTest {
                 "Key 2: last must be 1.0");
     }
 
-    // =========================================================================
-    // TC5.5 — BVA: last key is always 1.0 regardless of values
-    // =========================================================================
-
     /**
      * TC5.5 — {0:100, 1:200, 2:300}: last key must be 1.0
      */
@@ -320,11 +301,7 @@ class DataUtilitiesTest {
                 "Last key cumulative % must always be 1.0");
     }
 
-    // =========================================================================
-    // TC5.6 — ECP: decimal input values {0:2.5, 1:2.5} → {0:0.5, 1:1.0}
-    //         SPLIT into two independent tests
-    // =========================================================================
-
+ 
     /**
      * TC5.6a — {0:2.5, 1:2.5}: key 0 should be 2.5/5.0 = 0.5
      */
@@ -361,11 +338,7 @@ class DataUtilitiesTest {
                 "Key 1: 5.0/5.0 = 1.0");
     }
 
-    // =========================================================================
-    // TC5.7 — ECP: cumulative % must be strictly increasing
-    //         SPLIT: each comparison is its own test
-    // =========================================================================
-
+  
     /**
      * TC5.7a — {0:3, 1:5, 2:2}: key 0 value < key 1 value
      */
@@ -406,10 +379,7 @@ class DataUtilitiesTest {
                 "Cumulative %: value at key 1 must be less than key 2");
     }
 
-    // =========================================================================
-    // TC5.8 — Branch: null data → throws exception
-    // =========================================================================
-
+  
     /**
      * TC5.8 — null input: per Javadoc → throws InvalidParameterException
      */
@@ -420,10 +390,7 @@ class DataUtilitiesTest {
                 "Passing null should throw an exception");
     }
 
-    // =========================================================================
-    // TC5.9 — ECP: output item count equals input item count
-    // =========================================================================
-
+  
     /**
      * TC5.9 — {0:5, 1:9, 2:2}: result must have exactly 3 items
      */
@@ -434,10 +401,7 @@ class DataUtilitiesTest {
                 "Output must have the same number of items as input");
     }
 
-    // =========================================================================
-    // TC5.10 — ECP: each output value is in range [0.0, 1.0]
-    //          SPLIT: one test per key index
-    // =========================================================================
+ 
 
     /**
      * TC5.10a — {0:5, 1:9, 2:2}: key 0 value must be in [0.0, 1.0]
@@ -472,10 +436,7 @@ class DataUtilitiesTest {
                 "Key 2 must be in [0.0, 1.0], was: " + val);
     }
 
-    // =========================================================================
-    // TC5.11 — Branch: value == null → should be skipped (treated as 0)
-    // This covers the null-check branch inside the SUT's loop
-    // =========================================================================
+
 
     /**
      * TC5.11a — {0:null, 1:8, 2:2}: key 0 is null → treated as 0, skipped.
@@ -547,7 +508,7 @@ class DataUtilitiesTest {
         assertEquals(1.0, result.getValue(2).doubleValue(), DELTA,
                 "Last key must be 1.0 even with null middle value");
     }
- // Thêm vào cuối file, trước dấu }
+
     @Test
     void testCalculateRowTotal_validSum_whiteBox() {
         DefaultKeyedValues2D table = new DefaultKeyedValues2D();
@@ -636,4 +597,5 @@ class DataUtilitiesTest {
 
 
 }
+
 
