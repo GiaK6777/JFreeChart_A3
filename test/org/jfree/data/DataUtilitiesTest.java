@@ -1,25 +1,14 @@
 package org.jfree.data;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.security.InvalidParameterException;
+
 import org.junit.jupiter.api.Test;
 
-/**
- * JUnit 5 test suite for DataUtilities.getCumulativePercentages()
- *
- * Javadoc spec:
- *   - Returns a KeyedValues where each value = cumulative sum / total sum.
- *   - Percentages are between 0.0 and 1.0 (1.0 = 100%).
- *   - null not permitted → throws InvalidParameterException.
- *
- * Javadoc example:
- *   Input:  {0:5, 1:9, 2:2}  total=16
- *   Output: {0:0.3125, 1:0.875, 2:1.0}
- *
- * NOTE: SUT contains intentional defects — some tests will FAIL.
- * Test oracles are derived from the Javadoc spec, NOT the SUT output.
- */
+
 class DataUtilitiesTest {
 
     private static final double DELTA = 0.000000001d;
@@ -574,4 +563,76 @@ class DataUtilitiesTest {
         table.addValue(6.0, "R2", "C1");
         assertEquals(10.0, DataUtilities.calculateColumnTotal(table, 0), 1e-12);
     }
+    @Test
+    void testCreateNumberArray_ValidInput() {
+        double[] input = {1.0, 2.5, -3.4};
+        Number[] result = DataUtilities.createNumberArray(input);
+
+        assertEquals(3, result.length);
+        assertEquals(1.0, result[0]);
+        assertEquals(2.5, result[1]);
+        assertEquals(-3.4, result[2]);
+    }
+    
+    @Test
+    void testCreateNumberArray_EmptyArray() {
+        double[] input = {};
+        Number[] result = DataUtilities.createNumberArray(input);
+
+        assertEquals(0, result.length);
+    }
+    
+    @Test
+    void testCreateNumberArray_NullInput() {
+        assertThrows(InvalidParameterException.class, () -> {
+            DataUtilities.createNumberArray(null);
+        });
+    }
+    @Test
+    void testCreateNumberArray2D_ValidInput() {
+        double[][] input = {
+            {1.0, 2.0},
+            {3.0, 4.0}
+        };
+
+        Number[][] result = DataUtilities.createNumberArray2D(input);
+
+        assertEquals(2, result.length);
+        assertEquals(2, result[0].length);
+        assertEquals(1.0, result[0][0]);
+        assertEquals(4.0, result[1][1]);
+    }
+    
+    @Test
+    void testCreateNumberArray2D_EmptyArray() {
+        double[][] input = {};
+        Number[][] result = DataUtilities.createNumberArray2D(input);
+
+        assertEquals(0, result.length);
+    }
+    
+    @Test
+    void testCreateNumberArray2D_RowWithEmptyArray() {
+        double[][] input = {
+            {},
+            {5.0}
+        };
+
+        Number[][] result = DataUtilities.createNumberArray2D(input);
+
+        assertEquals(2, result.length);
+        assertEquals(0, result[0].length);
+        assertEquals(1, result[1].length);
+        assertEquals(5.0, result[1][0]);
+    }
+    
+    @Test
+    void testCreateNumberArray2D_NullInput() {
+        assertThrows(InvalidParameterException.class, () -> {
+            DataUtilities.createNumberArray2D(null);
+        });
+    }
+
+
+
 }
