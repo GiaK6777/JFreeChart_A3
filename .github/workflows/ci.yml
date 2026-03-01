@@ -1,0 +1,101 @@
+name: Java CI – JFreeChart A3
+
+# Trigger: run on every push or pull request to any branch
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Check out the repository code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Set up Java 21 (matches your local environment)
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # 3. Download required jar files into lib/ folder
+      #    (These are the same jars you use locally in Eclipse)
+      - name: Download dependencies into lib/
+        run: |
+          mkdir -p lib
+          
+          # JFreeChart core
+          curl -L -o lib/jfreechart.jar \
+            https://repo1.maven.org/maven2/org/jfree/jfreechart/1.0.19/jfreechart-1.0.19.jar
+
+          # JCommon (required by JFreeChart)
+          curl -L -o lib/jcommon.jar \
+            https://repo1.maven.org/maven2/org/jfree/jcommon/1.0.17/jcommon-1.0.17.jar
+
+          # Servlet API
+          curl -L -o lib/servlet-api.jar \
+            https://repo1.maven.org/maven2/javax/servlet/javax.servlet-api/3.0.1/javax.servlet-api-3.0.1.jar
+
+          # JUnit 5 - Jupiter API
+          curl -L -o lib/junit-jupiter-api.jar \
+            https://repo1.maven.org/maven2/org/junit/jupiter/junit-jupiter-api/5.9.3/junit-jupiter-api-5.9.3.jar
+
+          # JUnit 5 - Jupiter Engine
+          curl -L -o lib/junit-jupiter-engine.jar \
+            https://repo1.maven.org/maven2/org/junit/jupiter/junit-jupiter-engine/5.9.3/junit-jupiter-engine-5.9.3.jar
+
+          # JUnit 5 - Platform Launcher
+          curl -L -o lib/junit-platform-launcher.jar \
+            https://repo1.maven.org/maven2/org/junit/platform/junit-platform-launcher/1.9.3/junit-platform-launcher-1.9.3.jar
+
+          # JUnit 5 - Platform Console Standalone (for Ant junitlauncher)
+          curl -L -o lib/junit-platform-console-standalone.jar \
+            https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.9.3/junit-platform-console-standalone-1.9.3.jar
+
+          # JUnit 5 - Platform Commons
+          curl -L -o lib/junit-platform-commons.jar \
+            https://repo1.maven.org/maven2/org/junit/platform/junit-platform-commons/1.9.3/junit-platform-commons-1.9.3.jar
+
+          # JUnit 5 - Platform Engine
+          curl -L -o lib/junit-platform-engine.jar \
+            https://repo1.maven.org/maven2/org/junit/platform/junit-platform-engine/1.9.3/junit-platform-engine-1.9.3.jar
+
+          # Mockito Core (Java 21 compatible)
+          curl -L -o lib/mockito-core.jar \
+            https://repo1.maven.org/maven2/org/mockito/mockito-core/5.11.0/mockito-core-5.11.0.jar
+
+          # Byte Buddy (required by Mockito 5)
+          curl -L -o lib/byte-buddy.jar \
+            https://repo1.maven.org/maven2/net/bytebuddy/byte-buddy/1.14.12/byte-buddy-1.14.12.jar
+
+          # Byte Buddy Agent (required by Mockito 5)
+          curl -L -o lib/byte-buddy-agent.jar \
+            https://repo1.maven.org/maven2/net/bytebuddy/byte-buddy-agent/1.14.12/byte-buddy-agent-1.14.12.jar
+
+          # Objenesis (required by Mockito 5)
+          curl -L -o lib/objenesis.jar \
+            https://repo1.maven.org/maven2/org/objenesis/objenesis/3.3/objenesis-3.3.jar
+
+          # OpenTest4J (required by JUnit 5)
+          curl -L -o lib/opentest4j.jar \
+            https://repo1.maven.org/maven2/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar
+
+      # 4. Run tests using Ant
+      - name: Run tests with Ant
+        run: ant test
+        # Note: tests WILL fail because SUT has intentional defects.
+        # This is expected per assignment requirements.
+        # Screenshots of failing tests should be included in the report.
+
+      # 5. Upload test reports as artifact (for screenshots in report)
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: build/reports/
