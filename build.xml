@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="JFreeChart_A3" default="test" basedir=".">
+
+    <!-- =========================================================
+         Directory structure
+         src/   - production source code (SUT)
+         test/  - test source code
+         lib/   - all jar dependencies
+         build/ - compiled classes (generated, not committed)
+    ========================================================= -->
+
+    <property name="src.dir"        value="src"/>
+    <property name="test.dir"       value="test"/>
+    <property name="lib.dir"        value="lib"/>
+    <property name="build.dir"      value="build"/>
+    <property name="build.src"      value="${build.dir}/src"/>
+    <property name="build.test"     value="${build.dir}/test"/>
+    <property name="report.dir"     value="${build.dir}/reports"/>
+
+    <!-- Classpath: all jars in lib/ folder -->
+    <path id="classpath.lib">
+        <fileset dir="${lib.dir}" includes="*.jar"/>
+    </path>
+
+    <path id="classpath.test">
+        <path refid="classpath.lib"/>
+        <pathelement location="${build.src}"/>
+        <pathelement location="${build.test}"/>
+    </path>
+
+    <!-- =========================================================
+         clean: delete build output
+    ========================================================= -->
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <!-- =========================================================
+         init: create output directories
+    ========================================================= -->
+    <target name="init">
+        <mkdir dir="${build.src}"/>
+        <mkdir dir="${build.test}"/>
+        <mkdir dir="${report.dir}"/>
+    </target>
+
+    <!-- =========================================================
+         compile-src: compile SUT source code
+    ========================================================= -->
+    <target name="compile-src" depends="init">
+        <javac srcdir="${src.dir}"
+               destdir="${build.src}"
+               includeantruntime="false"
+               source="11" target="11">
+            <classpath refid="classpath.lib"/>
+        </javac>
+    </target>
+
+    <!-- =========================================================
+         compile-test: compile test code
+    ========================================================= -->
+    <target name="compile-test" depends="compile-src">
+        <javac srcdir="${test.dir}"
+               destdir="${build.test}"
+               includeantruntime="false"
+               source="11" target="11">
+            <classpath refid="classpath.test"/>
+        </javac>
+    </target>
+
+    <!-- =========================================================
+         test: run all JUnit 5 tests
+         Uses JUnit Platform Console Launcher (junit-platform.jar)
+    ========================================================= -->
+    <target name="test" depends="compile-test">
+        <junitlauncher haltOnFailure="false" printSummary="true">
+            <classpath refid="classpath.test"/>
+            <testclasses outputdir="${report.dir}">
+                <fileset dir="${build.test}">
+                    <include name="**/*Test.class"/>
+                </fileset>
+                <listener type="legacy-xml" sendSysOut="true" sendSysErr="true"/>
+            </testclasses>
+        </junitlauncher>
+    </target>
+
+</project>
